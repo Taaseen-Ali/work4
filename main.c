@@ -19,7 +19,6 @@ int main(int argc, char **argv) {
   transform = new_matrix(4, 4);
   print_matrix(make_bezier());
   
-  add_curve(edges,150,150,350,150,-100,-150,100,150,.1,HERMITE);
   /* print_matrix(make_rotX(M_PI/4)); */
   /* printf("\n"); */
   /* print_matrix(make_rotY(M_PI/4)); */

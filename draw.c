@@ -20,6 +20,14 @@
 void add_circle( struct matrix *edges,
                  double cx, double cy, double cz,
                  double r, double step ) {
+  double t,x,y,z;
+  for (t = 0; t < 1; t += step) {
+    x = r*cos(2*M_PI*t) + cx;
+    y = r*sin(2*M_PI*t) + cy;
+    z = cz;
+    add_edge(edges,x,y,z,r*cos(2*M_PI*(t+step)) +
+	     cx,r*sin(2*M_PI*(t+step)) + cy,z);
+  }
 }
 
 /*======== void add_curve() ==========
@@ -50,27 +58,31 @@ void add_curve( struct matrix *edges,
 						  x2,x3,type);
   struct matrix * coefs_y = generate_curve_coefs(y0,y1,
 						  y2,y3,type);
-  int x1_cor,y1_cor,x2_cor,y2_cor,ax,bx,cx,dx,ay,by,cy,dy;
+  print_matrix(coefs_x);
+  print_matrix(coefs_y);
 
-  ax = coefs_x->m[0];
-  bx = coefs_x->m[1];
-  cx = coefs_x->m[2];
-  dx = coefs_x->m[3];
+  double x1_cor,y1_cor,x2_cor,y2_cor,ax,bx,cx,dx,ay,by,cy,dy;
 
-  ay = coefs_y->m[0];
-  by = coefs_y->m[1];
-  cy = coefs_y->m[2];
-  dy = coefs_y->m[3];
+  ax = coefs_x->m[0][0];
+  bx = coefs_x->m[1][0];
+  cx = coefs_x->m[2][0];
+  dx = coefs_x->m[3][0];
 
-  x1_cor=dx;
-  y1_cor=dy;
+  ay = coefs_y->m[0][0];
+  by = coefs_y->m[1][0];
+  cy = coefs_y->m[2][0];
+  dy = coefs_y->m[3][0];
+
+  printf("%f,%f,%f,%f,%f,%f,%f,%f\n",ax,bx,cx,dx,ay,by,cy,dy);
   for(int k=0; k<100; k+=step){
-    int i=(double)k/100;
-    x2_cor= ax*(pow(i,3)) + bx*(pow(i,2)) + cx*i + dx;
-    y2_cor= ay*(pow(i,3)) + by*(pow(i,2)) + cy*i + dy;
+    double i = (double)k/100;
+    printf("%f\n", i);
+    x1_cor= ax*(pow(i,3)) + bx*(pow(i,2)) + cx*i + dx;
+    y1_cor= ay*(pow(i,3)) + by*(pow(i,2)) + cy*i + dy;
+    i=(double)(k+step)/100;
+    x2_cor= ax*(pow(i,3)) + bx*(pow(i,2)) + cx*(i) + dx;
+    y2_cor= ay*(pow(i,3)) + by*(pow(i,2)) + cy*(i) + dy;
     add_edge(edges, x1_cor, y1_cor, 0, x2_cor, y2_cor, 0);
-    x1_cor = x2_cor;
-    y1_cor = y2_cor;
   }
 }
 
